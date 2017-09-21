@@ -1,0 +1,29 @@
+{
+  "name": "run-when",
+  "version": "0.0.1",
+  "description": "Run tasks based on git diff files",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "release": "flow"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zzarcon/run-when.git"
+  },
+  "author": "zzarcon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zzarcon/run-when/issues"
+  },
+  "homepage": "https://github.com/zzarcon/run-when#readme",
+  "dependencies": {
+    "globby": "^6.1.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "flow-bin": "^0.55.0",
+    "flow-remove-types": "^1.2.1",
+    "jest": "^21.1.0"
+  }
+}
