@@ -1,1 +1,8 @@
 flow-typed
+__tests__
+src
+.babelrc
+.flowconfig
+.travis.yml
+README.md
+demo

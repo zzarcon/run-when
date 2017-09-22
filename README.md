@@ -1,26 +1,39 @@
+<p align="center">
+  <img src="demo/logo.gif" width="300">
+</p>
+
 # run-when
 > Run tasks based on git diff files
 
-Dependency free
+### Usage
 
-# Usage
+Having this directory tree:
 
-### Api
+```
+├── app
+├────── components
+├      ├── index.js
+├      ├── app.jsx
+└── __tests__
+└── package.json
+```
+
+#### Api
 
 ```javascript
 import runWhen from 'run-when';
 
 runWhen([
   {
-    glob: ['app/components', 'app/core'],
+    glob: ['app/components/index.js', 'app/__tests__/**'],
     task(paths) {
-      return new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('This will called!')
     }
   },
   {
     glob: ['!build'],
     task(paths) {
-
+      return new Promise(resolve => setTimeout(resolve, 1000));
     }
   },
   {
@@ -34,11 +47,15 @@ runWhen([
 
 ```
 
-### CLI
+#### CLI
 
 ```
-$ run-when app/components 'echo running tests... && yarn test:components'
+$ run-when '["app/components/**", "app/utils/**"]' 'echo running tests... && yarn test'
 ```
+
+### Matching
+
+TODO: show some examples and point to minimatch
 
 - [ ] Allow to pass method to run, by default Promise.resolve(exec('git diff --name-only origin/master'))
 
