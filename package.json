@@ -7,7 +7,7 @@
     "test": "jest",
     "flow": "flow",
     "flow:install": "flow-typed install",
-    "release": "flow && test && yarn remove_annotations && npm version patch && git push --tags && git push npm publish"
+    "_release": "flow && yarn test && yarn remove_annotations && npm version patch && git push --tags && git push npm publish"
   },
   "repository": {
     "type": "git",
