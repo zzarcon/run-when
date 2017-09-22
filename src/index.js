@@ -1,4 +1,4 @@
-// @flow
+//@flow
 const multimatch = require('multimatch');
 const {exec} = require('./utils');
 
@@ -6,15 +6,15 @@ type Files = Array<string>;
 
 interface Rule {
   glob: Array<string>,
-  task: () => void,
-  changedFiles?: Promise<Files>
+  task: (results: Files) => void,
+  changedFiles?: () => Promise<Files>
 };
 
 const runRuleFromFiles = (files: Files) => (rule: Rule): Promise<any> => {
   return new Promise(async (resolve, reject) => {
     const {changedFiles} = rule;
-    const files = changedFiles ? await changedFiles() : files;
-    const results = multimatch(files, rule.glob);
+    const filesToMatch = changedFiles ? await changedFiles() : files;
+    const results = multimatch(filesToMatch, rule.glob);
 
     if (!results.length) return;
 

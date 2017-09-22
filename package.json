@@ -5,6 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
+    "flow": "flow",
+    "flow:install": "flow-typed install",
     "release": "flow && test && yarn remove_annotations && npm version patch && git push --tags && git push npm publish"
   },
   "repository": {
@@ -24,6 +26,7 @@
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "flow-bin": "^0.55.0",
     "flow-remove-types": "^1.2.1",
+    "flow-typed": "^2.1.5",
     "jest": "^21.1.0"
   }
 }
