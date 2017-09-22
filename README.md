@@ -4,12 +4,12 @@
   <img src="demo/3.gif" width="200">
 </p>
 
-# run-when
+# run-when [![Build Status](https://travis-ci.org/zzarcon/run-when.svg)](https://travis-ci.org/zzarcon/run-when)
 > Run tasks based on git diff files
 
 ### Usage
 
-Having this directory tree:
+Having this directory tree with the following files changed:
 
 ```
 ├── app
@@ -20,6 +20,8 @@ Having this directory tree:
 ├      ├── app.spec.jsx
 └── package.json
 ```
+
+```run-when``` will check **glob** rules against it and run tasks if any changes have been made.
 
 #### Javascript
 
@@ -36,11 +38,12 @@ runWhen([
   {
     glob: ['!package.json'],
     task(paths) {
-      return Promise.resolve('You can a promise from your task');
+      return Promise.resolve('You can return a promise from your task');
     }
   },
   {
-    changedFiles: () => Promise.resolve(['app/index.js', 'app/components/header.jsx'])
+    // Optionally pass changed files
+    changedFiles: () => Promise.resolve(['app/index.js', 'app/components/header.jsx']),
     glob: ['app/components/**'],
     task(paths) {
       console.log(paths === ['app/components/header.jsx']);
@@ -56,25 +59,33 @@ runWhen([
 $ run-when '["app/components/**", "app/utils/**"]' 'echo running tests... && yarn test'
 ```
 
+* First argument is a **stringified JSON** containing **glob** patterns.
+* Second argument is the task to run.
 
 #### How it works
 
 By default ```run-when``` will use **git** to know which files have been changed. You can change that
 passing an array of files to ```changedFiles```.
 
-#### Matching
+#### Globbing pattern
 
-TODO: show some examples and point to minimatch
+The library uses [multimatch](https://github.com/sindresorhus/multimatch) for the globbing matching ([sindresorhus](https://github.com/sindresorhus) 😻). Just a quick overview:
 
-- [ ] Allow to pass method to run, by default Promise.resolve(exec('git diff --name-only origin/master'))
+- `*` matches any number of characters, but not `/`
+- `?` matches a single character, but not `/`
+- `**` matches any number of characters, including `/`, as long as it's the only thing in a path part
+- `{}` allows for a comma-separated list of "or" expressions
+- `!` at the beginning of a pattern will negate the match
+
+[Various patterns and expected matches.](https://github.com/sindresorhus/multimatch/blob/master/test/test.js)
 
 #### Api
 
-```
+```typescript
 type Files = Array<string>;
 ```
 
-```
+```typescript
 interface Rule {
   glob: Array<string>,
   task: (results: Files) => void,
@@ -82,7 +93,7 @@ interface Rule {
 }
 ```
 
-```
+```typescript
 type runWhen = (rules: Array<Rule>) => Promise;
 ```
 
