@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
-    "release": "flow && test && yarn remove_annotations && npm publish"
+    "release": "flow && test && yarn remove_annotations && npm version patch && git push --tags && git push npm publish"
   },
   "repository": {
     "type": "git",
