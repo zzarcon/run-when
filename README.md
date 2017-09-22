@@ -14,13 +14,20 @@ runWhen([
   {
     glob: ['app/components', 'app/core'],
     task(paths) {
-
+      return new Promise(resolve => setTimeout(resolve, 1000));
     }
   },
   {
     glob: ['!build'],
     task(paths) {
 
+    }
+  },
+  {
+    changedFiles: () => Promise.resolve(['app/index.js', 'app/components/header.jsx'])
+    glob: ['app/**'],
+    task(paths) {
+      console.log(paths.length);
     }
   }
 ])
