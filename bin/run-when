@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+const runWhen = require('../dist/index.js');
+const {exec} = require('../dist/utils.js');
+const {2: serializedGlob, 3: command} = process.argv;
+let glob;
+
+try {
+  glob = JSON.parse(serializedGlob);
+} catch (e) {
+  throw new Error('"glob" argument must be a valid JSON string');
+}
+
+runWhen([{
+  glob,
+  task: async () => {
+    try {
+      const result = await exec(command);
+      console.log(result);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}]);

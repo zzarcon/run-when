@@ -7,8 +7,8 @@
     "test": "jest",
     "flow": "flow",
     "flow:install": "flow-typed install",
-    "remove_annotations": "flow-remove-types ./src --out-dir ./dist",
-    "_release": "flow && yarn test && yarn remove_annotations && npm version patch && git push --tags && git push npm publish"
+    "flow:remove": "flow-remove-types --pretty ./src --out-dir ./dist",
+    "_release": "flow && yarn test && yarn flow:remove && npm version patch && git push --tags && git push && npm publish"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,8 @@
     "flow-remove-types": "^1.2.1",
     "flow-typed": "^2.1.5",
     "jest": "^21.1.0"
+  },
+  "bin": {
+    "run-when": "./bin/run-when"
   }
 }
