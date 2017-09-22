@@ -1,6 +1,6 @@
 {
   "name": "run-when",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Run tasks based on git diff files ",
   "main": "dist/index.js",
   "scripts": {
