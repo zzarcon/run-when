@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="demo/logo.gif" width="300">
+  <img src="demo/1.gif" width="200">
+  <img src="demo/2.gif" width="200">
+  <img src="demo/3.gif" width="200">
 </p>
 
 # run-when
@@ -15,10 +17,11 @@ Having this directory tree:
 ├      ├── index.js
 ├      ├── app.jsx
 └── __tests__
+├      ├── app.spec.jsx
 └── package.json
 ```
 
-#### Api
+#### Javascript
 
 ```javascript
 import runWhen from 'run-when';
@@ -27,23 +30,23 @@ runWhen([
   {
     glob: ['app/components/index.js', 'app/__tests__/**'],
     task(paths) {
-      console.log('This will called!')
+      console.log('This will be called!');
     }
   },
   {
-    glob: ['!build'],
+    glob: ['!package.json'],
     task(paths) {
-      return new Promise(resolve => setTimeout(resolve, 1000));
+      return Promise.resolve('You can a promise from your task');
     }
   },
   {
     changedFiles: () => Promise.resolve(['app/index.js', 'app/components/header.jsx'])
-    glob: ['app/**'],
+    glob: ['app/components/**'],
     task(paths) {
-      console.log(paths.length);
+      console.log(paths === ['app/components/header.jsx']);
     }
   }
-])
+]);
 
 ```
 
@@ -53,21 +56,38 @@ runWhen([
 $ run-when '["app/components/**", "app/utils/**"]' 'echo running tests... && yarn test'
 ```
 
-### Matching
+
+#### How it works
+
+By default ```run-when``` will use **git** to know which files have been changed. You can change that
+passing an array of files to ```changedFiles```.
+
+#### Matching
 
 TODO: show some examples and point to minimatch
 
 - [ ] Allow to pass method to run, by default Promise.resolve(exec('git diff --name-only origin/master'))
 
-# Installation
+#### Api
 
+```
+type Files = Array<string>;
+```
 
-# TODO
+```
+interface Rule {
+  glob: Array<string>,
+  task: (results: Files) => void,
+  changedFiles?: () => Promise<Files>
+}
+```
 
-- [ ] Flowtype
-- [ ] nvm
-- [ ] Promisify ```exec```
+```
+type runWhen = (rules: Array<Rule>) => Promise;
+```
 
-- Glob lib: 
-  https://github.com/isaacs/node-glob
-  https://github.com/sindresorhus/globby
+#### Installation
+
+```
+$ yarn add run-when -D
+```
