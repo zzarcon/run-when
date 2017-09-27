@@ -40,6 +40,7 @@ const getChangedFiles = (): Promise<Files> => {
 };
 
 const runWhen = async (rules: Array<Rule>): Promise<any> => {
+  // TODO: not call getChangedFiles if all rules contain 'changedFiles'
   const changedFiles = await getChangedFiles();
   const runRule = runRuleFromFiles(changedFiles);
   const runningTasks = rules.map(runRule);
