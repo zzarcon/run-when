@@ -7,8 +7,6 @@ install:
   - git checkout -qf $TRAVIS_COMMIT
 cache: yarn
 script:
-  # - git branch
-  # - git diff --name-only origin/master
   - yarn
   - yarn flow:remove
   - yarn test -- --runInBand --coverage

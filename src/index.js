@@ -1,6 +1,7 @@
 //@flow
 const multimatch = require('multimatch');
-const {exec} = require('./utils');
+const {promisify} = require('util');
+const exec = promisify(require('child_process').exec);
 
 type Files = Array<string>;
 
@@ -30,8 +31,8 @@ const runRuleFromFiles = (files: Files) => (rule: Rule): Promise<any> => {
 
 const getChangedFiles = (): Promise<Files> => {
   // TODO: Remove "origin"?
-  return exec('git diff --name-only origin/master').then(result => {
-    const files = result
+  return exec('git diff --name-only origin/master').then(({stdout}) => {
+    const files = stdout
       .split('\n')
       .filter(f => f.length);
 
