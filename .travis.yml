@@ -9,4 +9,5 @@ cache: yarn
 script:
   # - git branch
   # - git diff --name-only origin/master
+  - yarn
   - yarn test -- --runInBand --coverage
