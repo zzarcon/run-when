@@ -10,4 +10,5 @@ script:
   # - git branch
   # - git diff --name-only origin/master
   - yarn
+  - yarn flow:remove
   - yarn test -- --runInBand --coverage
