@@ -26,4 +26,25 @@ describe('CLI mode', () => {
     expect(stdout.trim()).toEqual('fixtures changed');
     await restoreFixtures();
   });
+
+  test('should throw a parsing error if first argument is not a valid JSON', async () => {
+    expect.assertions(1);
+
+    try {
+      await run(`'["foo]' 'echo invalid json'`);
+    } catch (e) {
+      expect(e.message).toEqual(expect.stringContaining('"glob" argument must be a valid JSON string'));
+    }
+  });
+
+  test('should not run the task if glob doesnt match any file', async () => {
+    const {stdout, stderr} = await run(`'["package.json"]' 'echo no match'`);
+
+    expect(stdout).toBeFalsy();
+    expect(stderr).toBeFalsy();
+  });
+
+  test.skip('should throw an Error if there is no remote origin', () => {
+    // TODO: investigate how to have a testeable scenario
+  });
 });
