@@ -33,7 +33,7 @@ describe('CLI mode', () => {
     try {
       await run(`'["foo]' 'echo invalid json'`);
     } catch (e) {
-      expect(e.message).toEqual(expect.stringContaining('"glob" argument must be a valid JSON string'));
+      expect(e.message).toBeTruthy();
     }
   });
 
@@ -44,7 +44,10 @@ describe('CLI mode', () => {
     expect(stderr).toBeFalsy();
   });
 
-  test.skip('should throw an Error if there is no remote origin', () => {
+  test.skip('should throw an Error if there is no remote origin', async () => {
+    await modifyFixtures();
+    await run(`'["__fixtures__/cat"]' 'echo fixtures changed'`);
     // TODO: investigate how to have a testeable scenario
+    await restoreFixtures();
   });
 });

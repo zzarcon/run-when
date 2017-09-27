@@ -2,6 +2,10 @@
 const runWhen = require('../src');
 
 describe('Using "changedFiles"', () => {
+  test.skip('should throw exception if glob is invalid', async () => {
+
+  });
+
   test('default', async () => {
     const task = jest.fn();
 

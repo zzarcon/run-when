@@ -13,19 +13,19 @@ type Rule = {
 
 const runRuleFromFiles = (files: Files) => (rule: Rule): Promise<any> => {
   return new Promise(async (resolve, reject) => {
-    const {glob, changedFiles, task} = rule;
-    const filesToMatch = changedFiles ? await changedFiles() : files;
-    const results = multimatch(filesToMatch, glob);
+    try {
+      const {glob, changedFiles, task} = rule;
+      const filesToMatch = changedFiles ? await changedFiles() : files;
+      const results = multimatch(filesToMatch, glob);
 
-    if (!results.length || !task) return resolve();
+      if (!results.length || !task) return resolve();
 
-    const taskResult = task(results);
+      const taskResult = task(results);
 
-    if (!(taskResult instanceof Promise)) return resolve();
+      if (!(taskResult instanceof Promise)) return resolve();
 
-    taskResult.then(() => {
-      resolve(results);
-    });
+      taskResult.then(() => resolve(results));
+    } catch (e) { reject(e); }
   });
 };
 
