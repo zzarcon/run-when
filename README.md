@@ -7,10 +7,6 @@
 # run-when [![Build Status](https://travis-ci.org/zzarcon/run-when.svg)](https://travis-ci.org/zzarcon/run-when)
 > Run tasks based on git diff files
 
-<p align="center">
-  <img src="demo/6.gif">
-</p>
-
 ### Usage
 
 Having this directory tree with the following files changed:
