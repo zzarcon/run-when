@@ -1,6 +1,7 @@
 //@flow
 const multimatch = require('multimatch');
-const {exec} = require('./utils');
+const {promisify} = require('util');
+const exec = promisify(require('child_process').exec);
 
 type Files = Array<string>;
 
@@ -12,26 +13,26 @@ type Rule = {
 
 const runRuleFromFiles = (files: Files) => (rule: Rule): Promise<any> => {
   return new Promise(async (resolve, reject) => {
-    const {glob, changedFiles, task} = rule;
-    const filesToMatch = changedFiles ? await changedFiles() : files;
-    const results = multimatch(filesToMatch, glob);
+    try {
+      const {glob, changedFiles, task} = rule;
+      const filesToMatch = changedFiles ? await changedFiles() : files;
+      const results = multimatch(filesToMatch, glob);
 
-    if (!results.length || !task) return resolve();
+      if (!results.length || !task) return resolve();
 
-    const taskResult = task(results);
+      const taskResult = task(results);
 
-    if (!(taskResult instanceof Promise)) return resolve();
+      if (!(taskResult instanceof Promise)) return resolve();
 
-    taskResult.then(() => {
-      resolve(results);
-    });
+      taskResult.then(() => resolve(results));
+    } catch (e) { reject(e); }
   });
 };
 
 const getChangedFiles = (): Promise<Files> => {
   // TODO: Remove "origin"?
-  return exec('git diff --name-only origin/master').then(result => {
-    const files = result
+  return exec('git diff --name-only origin/master').then(({stdout}) => {
+    const files = stdout
       .split('\n')
       .filter(f => f.length);
 
@@ -40,6 +41,7 @@ const getChangedFiles = (): Promise<Files> => {
 };
 
 const runWhen = async (rules: Array<Rule>): Promise<any> => {
+  // TODO: not call getChangedFiles if all rules contain 'changedFiles'
   const changedFiles = await getChangedFiles();
   const runRule = runRuleFromFiles(changedFiles);
   const runningTasks = rules.map(runRule);

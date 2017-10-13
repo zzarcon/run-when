@@ -1,24 +1,29 @@
 #!/usr/bin/env node
 
 const runWhen = require('../dist/index.js');
-const {exec} = require('../dist/utils.js');
+const {promisify} = require('util');
+const exec = promisify(require('child_process').exec);
 const {2: serializedGlob, 3: command} = process.argv;
 let glob;
 
-try {
-  glob = JSON.parse(serializedGlob);
-} catch (e) {
-  throw new Error('"glob" argument must be a valid JSON string');
-}
+(async () => {
+  try {
+    const glob = JSON.parse(serializedGlob);
 
-runWhen([{
-  glob,
-  task: async () => {
-    try {
-      const result = await exec(command);
-      console.log(result);
-    } catch (e) {
-      console.log(e);
-    }
+    await runWhen([{
+      glob,
+      task: async () => {
+        try {
+          const {stdout} = await exec(command);
+          console.log(stdout);
+        } catch (e) {
+          console.log(e);
+          process.exit(1);
+        }
+      }
+    }]);
+  } catch (e) {
+    console.log(e.message);
+    process.exit(1);
   }
-}]);
+})();
