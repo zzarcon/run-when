@@ -50,4 +50,12 @@ describe('CLI mode', () => {
     // TODO: investigate how to have a testeable scenario
     await restoreFixtures();
   });
+
+  test.skip('should not wait for command to finish to display std output', async () => {
+    await modifyFixtures();
+    const {stdout} = await run(`'["__fixtures__/**"]' 'echo fixtures changed && sleep 2 && echo hi!'`);
+    console.log(stdout)
+    expect(stdout.trim()).toEqual(`fixtures changed\nhi!`);
+    await restoreFixtures();
+  });
 });
